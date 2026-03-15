@@ -1,7 +1,7 @@
 'use client';
 
 import { forwardRef } from 'react';
-import { ContractData } from '@/lib/types';
+import { ContractData, COMPANY_LABELS, COMPANY_ADDRESS, COMPANY_REPRESENTATIVE } from '@/lib/types';
 import { toWareki } from '@/lib/date-utils';
 
 const baseStyle: React.CSSProperties = {
@@ -54,7 +54,7 @@ function ConsultantContract({ data }: { data: ContractData }) {
 
       <p>
         （利用者）<span style={boldStyle}>{data.clientName}</span>
-        （以下「甲」という。）と（提供者）株式会社エムクリエイト（以下「乙」という。）は、後記のサービスにつき、次のとおりサービス利用契約（以下「本契約」という。）を締結する。
+        （以下「甲」という。）と（提供者）{COMPANY_LABELS[data.company]}（以下「乙」という。）は、後記のサービスにつき、次のとおりサービス利用契約（以下「本契約」という。）を締結する。
       </p>
 
       <p style={articleStyle}>第１条　（目的）</p>
@@ -161,12 +161,12 @@ function ConsultantContract({ data }: { data: ContractData }) {
       </div>
 
       <div style={{ marginTop: '24px' }}>
-        <p>（甲）：　千葉県松戸市西馬橋2-40-41</p>
-        <p style={{ paddingLeft: '6em' }}>株式会社エムクリエイト　入江円香</p>
+        <p>（甲）：</p>
       </div>
 
       <div style={{ marginTop: '40px' }}>
-        <p>（乙）：</p>
+        <p>（乙）：　{COMPANY_ADDRESS[data.company]}</p>
+        <p style={{ paddingLeft: '6em' }}>{COMPANY_LABELS[data.company]}　{COMPANY_REPRESENTATIVE[data.company].name}</p>
       </div>
     </div>
   );
@@ -180,7 +180,7 @@ function LaunchOutsourceContract({ data }: { data: ContractData }) {
       <div style={titleStyle}>業務委託契約書</div>
 
       <p>
-        株式会社エムクリエイト（以下「甲」という。）と、<span style={{ borderBottom: '1px solid #333', padding: '0 2em' }}>{data.clientName}</span>（以下「乙」という。）は、甲が受託するローンチ構築業務に関して、以下のとおり業務委託契約（以下「本契約」という。）を締結する。
+        {COMPANY_LABELS[data.company]}（以下「甲」という。）と、<span style={{ borderBottom: '1px solid #333', padding: '0 2em' }}>{data.clientName}</span>（以下「乙」という。）は、甲が受託するローンチ構築業務に関して、以下のとおり業務委託契約（以下「本契約」という。）を締結する。
       </p>
 
       <p style={articleStyle}>第1条（定義）</p>
@@ -329,9 +329,9 @@ function LaunchOutsourceContract({ data }: { data: ContractData }) {
       </div>
 
       <div style={{ marginTop: '24px' }}>
-        <p>甲：株式会社エムクリエイト</p>
-        <p style={{ paddingLeft: '2em' }}>代表取締役　入江円香</p>
-        <p style={{ paddingLeft: '2em' }}>住所：千葉県松戸市西馬橋2-40-41</p>
+        <p>甲：{COMPANY_LABELS[data.company]}</p>
+        <p style={{ paddingLeft: '2em' }}>{COMPANY_REPRESENTATIVE[data.company].title}　{COMPANY_REPRESENTATIVE[data.company].name}</p>
+        <p style={{ paddingLeft: '2em' }}>住所：{COMPANY_ADDRESS[data.company]}</p>
       </div>
 
       <div style={{ marginTop: '24px' }}>
@@ -350,7 +350,7 @@ function GeneralOutsourceContract({ data }: { data: ContractData }) {
       <div style={titleStyle}>業務委託契約書</div>
 
       <p>
-        株式会社エムクリエイト（以下「甲」という）と<span style={boldStyle}>{data.clientName}</span>（以下「乙」という）は、甲が乙に対し、後掲の本件業務を委託することに関し、以下の通り業務委託契約（以下「本契約」という。）を締結する。
+        {COMPANY_LABELS[data.company]}（以下「甲」という）と<span style={boldStyle}>{data.clientName}</span>（以下「乙」という）は、甲が乙に対し、後掲の本件業務を委託することに関し、以下の通り業務委託契約（以下「本契約」という。）を締結する。
       </p>
 
       <p style={articleStyle}>第１条　（委託業務等）</p>
@@ -423,8 +423,379 @@ function GeneralOutsourceContract({ data }: { data: ContractData }) {
       </div>
 
       <div style={{ marginTop: '24px' }}>
-        <p>甲：株式会社エムクリエイト</p>
-        <p style={{ paddingLeft: '2em' }}>代表取締役　入江円香</p>
+        <p>甲：{COMPANY_LABELS[data.company]}</p>
+        <p style={{ paddingLeft: '2em' }}>{COMPANY_REPRESENTATIVE[data.company].title}　{COMPANY_REPRESENTATIVE[data.company].name}</p>
+      </div>
+
+      <div style={{ marginTop: '24px' }}>
+        <p>乙：{data.clientName || '＿＿＿＿＿＿＿＿＿＿'}</p>
+      </div>
+    </div>
+  );
+}
+
+function LaunchReceiveContract({ data }: { data: ContractData }) {
+  const warekiContract = toWareki(data.contractDate);
+
+  return (
+    <div style={baseStyle}>
+      <div style={titleStyle}>業務委託契約書</div>
+
+      <p>
+        <span style={boldStyle}>{data.clientName}</span>（以下「甲」という。）と、{COMPANY_LABELS[data.company]}（以下「乙」という。）は、甲が乙に委託するローンチ構築業務に関して、以下のとおり業務委託契約（以下「本契約」という。）を締結する。
+      </p>
+
+      <p style={articleStyle}>第1条（定義）</p>
+      <div style={indentStyle}>
+        <p>１　本契約において、以下の用語は次の意味を有するものとする。</p>
+        <div style={{ paddingLeft: '1em' }}>
+          <p>・「本業務」とは、甲が乙に委託するローンチ構築プロジェクトに関する業務をいう。</p>
+          <p>・「成果物」とは、本業務の遂行により乙が制作するLP、UTAGE設定データ、配信シナリオ、その他の制作物をいう。</p>
+          <p>・「UTAGE」とは、甲が別途契約するマーケティングオートメーションプラットフォームをいう。</p>
+        </div>
+      </div>
+
+      <p style={articleStyle}>第2条（業務内容）</p>
+      <div style={indentStyle}>
+        <p>１　甲は、乙に対して以下の業務の全部または一部を委託するものとする。</p>
+        <div style={{ paddingLeft: '1em' }}>
+          <p>・オプトインページ、シナリオ</p>
+          <p>・セミナーまたは個別相談LP制作、それにまつわるシナリオ作成</p>
+          <p>・商品購入LP制作（簡易版）それにまつわる決済設定</p>
+          <p>・UTAGE構築（ファネル設定、フォーム作成、イベント設定、配信設定等）</p>
+          <p>・セミナー構成作成、スライド作成</p>
+          <p>・メール / LINE配信シナリオの設定（ステップ配信文を含む）</p>
+          <p>・オートウェビナー申込ページ・配信ページの構築</p>
+          <p>・自動導線の構築・テスト</p>
+          <p>・その他甲が指示する構築関連業務</p>
+        </div>
+        <p>２　乙は、甲が提供するファネル設計書、テキスト原稿、デザインデータ等の指示に基づき、本業務を遂行するものとする。</p>
+      </div>
+
+      <p style={articleStyle}>第3条（委託料および支払条件）</p>
+      <div style={indentStyle}>
+        <p>１　甲は乙に対し、本業務の委託料として以下の金額を支払うものとする。</p>
+        <p style={{ textAlign: 'center', ...boldStyle }}>金{data.launchFee || '＿＿＿＿＿＿'}円（税込）</p>
+        <p>２　支払方法は以下のとおりとする。</p>
+        <div style={{ paddingLeft: '1em' }}>
+          <p>・契約締結後7日以内に委託料の50%を乙の指定する銀行口座に振り込むものとする。</p>
+          <p>・残りの50%は、成果物の納品完了後7日以内に乙の指定する銀行口座に振り込むものとする。</p>
+        </div>
+        <p>３　振込手数料は甲の負担とする。</p>
+      </div>
+
+      <p style={articleStyle}>第4条（業務の遂行方法）</p>
+      <div style={indentStyle}>
+        <p>１　乙は、善良なる管理者の注意をもって本業務を遂行するものとする。</p>
+        <p>２　甲と乙の連絡手段はChatworkを基本とし、必要に応じてZoom等のオンラインツールを使用するものとする。</p>
+        <p>３　乙は、甲が定めるスケジュールに従い、各工程の納期を遵守するものとする。</p>
+      </div>
+
+      <p style={articleStyle}>第5条（品質基準および修正対応義務）</p>
+      <div style={indentStyle}>
+        <p>１　乙は、本業務の成果物について、甲が定める品質基準を満たすよう制作するものとする。</p>
+        <p>２　甲から成果物に対して修正指示があった場合、乙は合理的な期間内に無償で修正対応を行うものとする。</p>
+        <p>３　成果物の納品後、甲が検収を行い、不具合または品質基準に満たない箇所がある場合、乙は甲の指示に基づき速やかに修正するものとする。</p>
+      </div>
+
+      <p style={articleStyle}>第6条（知的財産権）</p>
+      <div style={indentStyle}>
+        <p>１　本業務により乙が制作した成果物の著作権（著作権法第27条および第28条に定める権利を含む。）は、甲に帰属するものとする。</p>
+        <p>２　乙は、前項の成果物についての著作者人格権を行使しないものとする。</p>
+      </div>
+
+      <p style={articleStyle}>第7条（秘密保持）</p>
+      <div style={indentStyle}>
+        <p>１　甲および乙は、本契約の履行に関連して知り得た相手方の技術上、営業上その他の秘密情報を、相手方の事前の書面による承諾なく第三者に開示・漏洩してはならない。</p>
+        <p>２　秘密保持義務は、本契約の終了後3年間存続するものとする。</p>
+      </div>
+
+      <p style={articleStyle}>第8条（個人情報の取扱い）</p>
+      <div style={indentStyle}>
+        <p>乙は、本業務の遂行にあたり個人情報を取り扱う場合、個人情報の保護に関する法律その他関連法令を遵守し、適切に管理するものとする。</p>
+      </div>
+
+      <p style={articleStyle}>第9条（契約期間）</p>
+      <div style={indentStyle}>
+        <p>本契約の有効期間は、本契約締結日から成果物の納品および検収完了までとする。</p>
+      </div>
+
+      <p style={articleStyle}>第10条（契約の解除）</p>
+      <div style={indentStyle}>
+        <p>甲または乙は、相手方が本契約の条項に違反し、相当の期間を定めて催告したにもかかわらず是正しなかったときは、本契約を解除することができる。</p>
+      </div>
+
+      <p style={articleStyle}>第11条（反社会的勢力の排除）</p>
+      <div style={indentStyle}>
+        <p>甲および乙は、自己およびその役員が、反社会的勢力に該当しないこと、および反社会的勢力と関係を有しないことを表明し保証する。</p>
+      </div>
+
+      <p style={articleStyle}>第12条（合意管轄）</p>
+      <div style={indentStyle}>
+        <p>本契約に関する紛争については、乙の本店所在地を管轄する裁判所を第一審の専属的合意管轄裁判所とする。</p>
+      </div>
+
+      <p style={articleStyle}>第13条（協議）</p>
+      <div style={indentStyle}>
+        <p>本契約に定めのない事項については、甲乙誠意をもって協議のうえ解決するものとする。</p>
+      </div>
+
+      <div style={{ marginTop: '48px' }}>
+        <p>本契約の締結を証するため、本書2通を作成し、甲乙記名押印のうえ、各自1通を保有する。</p>
+      </div>
+
+      <div style={{ marginTop: '32px' }}>
+        <p>契約締結日：{warekiContract || '令和　　年　　月　　日'}</p>
+      </div>
+
+      <div style={{ marginTop: '24px' }}>
+        <p>甲：{data.clientName || '＿＿＿＿＿＿＿＿＿＿'}</p>
+      </div>
+
+      <div style={{ marginTop: '24px' }}>
+        <p>乙：{COMPANY_LABELS[data.company]}</p>
+        <p style={{ paddingLeft: '2em' }}>{COMPANY_REPRESENTATIVE[data.company].title}　{COMPANY_REPRESENTATIVE[data.company].name}</p>
+        <p style={{ paddingLeft: '2em' }}>住所：{COMPANY_ADDRESS[data.company]}</p>
+      </div>
+    </div>
+  );
+}
+
+function JybBaseContract({ data }: { data: ContractData }) {
+  const warekiContract = toWareki(data.contractDate);
+  const warekiStart = toWareki(data.startDate);
+  const warekiEnd = toWareki(data.endDate);
+
+  return (
+    <div style={baseStyle}>
+      <div style={titleStyle}>業務委託基本契約書</div>
+
+      <p>
+        一般社団法人 日本陰陽五行トーンビューティー協会（以下「甲」という）と<span style={boldStyle}>{data.clientName}</span>（以下「乙」という）は、甲が乙に対し業務を委託することに関し、以下の通り業務委託基本契約（以下「本契約」という。）を締結する。
+      </p>
+
+      <p style={articleStyle}>第１条（目的）</p>
+      <div style={indentStyle}>
+        <p>本契約は、甲が乙に対して委託する業務に関する基本的な事項を定めることを目的とする。</p>
+      </div>
+
+      <p style={articleStyle}>第２条（委託業務）</p>
+      <div style={indentStyle}>
+        <p>１．　甲は、乙に対し、甲の事業に関連する以下の業務（以下「本業務」という）を委託し、乙はこれを受託する。</p>
+        <div style={{ paddingLeft: '1em' }}>
+          <p>（1）甲が提供するサービスに関するカウンセリング業務</p>
+          <p>（2）甲が提供するサービスに関するサポート業務</p>
+          <p>（3）その他甲乙間で別途合意した業務</p>
+        </div>
+        <p>２．　個別の業務内容、報酬、期間等の詳細は、個別契約において定めるものとする。</p>
+      </div>
+
+      <p style={articleStyle}>第３条（個別契約）</p>
+      <div style={indentStyle}>
+        <p>１．　甲および乙は、本契約に基づき、個別の業務について個別契約を締結するものとする。</p>
+        <p>２．　個別契約において本契約と異なる定めがある場合は、個別契約の定めが優先する。</p>
+      </div>
+
+      <p style={articleStyle}>第４条（業務遂行）</p>
+      <div style={indentStyle}>
+        <p>１．　乙は、善良なる管理者の注意をもって本業務を遂行するものとする。</p>
+        <p>２．　乙は、甲の指示に従い、誠実に業務を遂行するものとする。</p>
+        <p>３．　乙は、本業務の遂行にあたり、甲のブランドイメージおよび信用を損なわないよう配慮するものとする。</p>
+      </div>
+
+      <p style={articleStyle}>第５条（報酬）</p>
+      <div style={indentStyle}>
+        <p>１．　甲は、乙に対し、個別契約に定める報酬を支払うものとする。</p>
+        <p>２．　報酬の支払方法および支払時期は、個別契約において定めるものとする。</p>
+      </div>
+
+      <p style={articleStyle}>第６条（秘密保持）</p>
+      <div style={indentStyle}>
+        <p>１．　甲および乙は、本契約および個別契約の履行に関連して知り得た相手方の技術上、営業上その他業務上の秘密情報を、相手方の事前の書面による承諾なく第三者に開示・漏洩してはならない。</p>
+        <p>２．　前項の秘密保持義務は、本契約終了後も3年間存続するものとする。</p>
+      </div>
+
+      <p style={articleStyle}>第７条（個人情報の取扱い）</p>
+      <div style={indentStyle}>
+        <p>乙は、本業務の遂行にあたり個人情報を取り扱う場合、個人情報の保護に関する法律その他関連法令を遵守し、適切に管理するものとする。</p>
+      </div>
+
+      <p style={articleStyle}>第８条（知的財産権）</p>
+      <div style={indentStyle}>
+        <p>１．　本業務により生じた成果物の著作権その他の知的財産権は、甲に帰属するものとする。</p>
+        <p>２．　乙は、甲が提供するテキスト、教材、メソッド等の知的財産を本業務以外の目的で使用してはならない。</p>
+      </div>
+
+      <p style={articleStyle}>第９条（再委託の禁止）</p>
+      <div style={indentStyle}>
+        <p>乙は、甲の書面による事前の承諾なく、本業務の全部または一部を第三者に再委託してはならない。</p>
+      </div>
+
+      <p style={articleStyle}>第１０条（契約期間）</p>
+      <div style={indentStyle}>
+        <p>１．　本契約の有効期間は、<span style={highlightStyle}>{warekiStart}</span>から<span style={highlightStyle}>{warekiEnd}</span>までとする。</p>
+        <p>２．　本契約は、期間満了の1ヶ月前までに甲または乙から書面による解約の申し出がない限り、同一条件で1年間自動更新されるものとし、以降も同様とする。</p>
+      </div>
+
+      <p style={articleStyle}>第１１条（解除）</p>
+      <div style={indentStyle}>
+        <p>甲または乙は、相手方が本契約の条項に違反し、相当の期間を定めて催告したにもかかわらず是正しなかったときは、本契約および個別契約を解除することができる。</p>
+      </div>
+
+      <p style={articleStyle}>第１２条（損害賠償）</p>
+      <div style={indentStyle}>
+        <p>甲または乙は、故意または過失により本契約に違反し、相手方に損害を与えた場合は、直接かつ現実に生じた通常の損害に限り賠償する責めを負う。</p>
+      </div>
+
+      <p style={articleStyle}>第１３条（反社会的勢力の排除）</p>
+      <div style={indentStyle}>
+        <p>甲および乙は、自己およびその役員が、反社会的勢力に該当しないこと、および反社会的勢力と関係を有しないことを表明し保証する。</p>
+      </div>
+
+      <p style={articleStyle}>第１４条（合意管轄）</p>
+      <div style={indentStyle}>
+        <p>本契約に関する紛争については、甲の所在地を管轄する裁判所を第一審の専属的合意管轄裁判所とする。</p>
+      </div>
+
+      <p style={articleStyle}>第１５条（協議）</p>
+      <div style={indentStyle}>
+        <p>本契約に定めのない事項については、甲乙誠意をもって協議のうえ解決するものとする。</p>
+      </div>
+
+      <div style={{ marginTop: '48px' }}>
+        <p>本契約の締結を証するため、本書2通を作成し、甲乙記名押印のうえ、各自1通を保有する。</p>
+      </div>
+
+      <div style={{ marginTop: '32px' }}>
+        <p>契約締結日：{warekiContract || '令和　　年　　月　　日'}</p>
+      </div>
+
+      <div style={{ marginTop: '24px' }}>
+        <p>甲：一般社団法人 日本陰陽五行トーンビューティー協会</p>
+        <p style={{ paddingLeft: '2em' }}>代表理事　入江円香</p>
+        <p style={{ paddingLeft: '2em' }}>住所：千葉県松戸市西馬橋2-40-41</p>
+      </div>
+
+      <div style={{ marginTop: '24px' }}>
+        <p>乙：{data.clientName || '＿＿＿＿＿＿＿＿＿＿'}</p>
+      </div>
+    </div>
+  );
+}
+
+function JybIndividualContract({ data }: { data: ContractData }) {
+  const warekiContract = toWareki(data.contractDate);
+  const warekiStart = toWareki(data.startDate);
+  const warekiEnd = toWareki(data.endDate);
+  const isCounselor = data.jybRole === 'counselor';
+  const roleLabel = isCounselor ? 'カウンセラー' : 'サポーター';
+
+  const tableStyle: React.CSSProperties = {
+    width: '100%',
+    borderCollapse: 'collapse',
+    marginTop: '16px',
+    marginBottom: '16px',
+    fontSize: '13px',
+  };
+
+  const thStyle: React.CSSProperties = {
+    border: '1px solid #333',
+    padding: '8px 12px',
+    backgroundColor: '#f5f5f5',
+    fontWeight: 700,
+    textAlign: 'left',
+    whiteSpace: 'nowrap',
+  };
+
+  const tdStyle: React.CSSProperties = {
+    border: '1px solid #333',
+    padding: '8px 12px',
+    textAlign: 'left',
+  };
+
+  return (
+    <div style={baseStyle}>
+      <div style={titleStyle}>業務委託個別契約書</div>
+
+      <p>
+        一般社団法人 日本陰陽五行トーンビューティー協会（以下「甲」という）と<span style={boldStyle}>{data.clientName}</span>（以下「乙」という）は、甲乙間で締結された業務委託基本契約書（以下「基本契約」という）に基づき、以下の通り個別契約を締結する。
+      </p>
+
+      <table style={tableStyle}>
+        <tbody>
+          <tr>
+            <th style={thStyle}>業務種別</th>
+            <td style={tdStyle}>{roleLabel}業務</td>
+          </tr>
+          <tr>
+            <th style={thStyle}>業務内容</th>
+            <td style={tdStyle}>
+              {isCounselor ? (
+                <>甲が提供するサービスに関するカウンセリング業務<br />（体質診断、カウンセリングセッション等）</>
+              ) : (
+                <>甲が提供するサービスに関するサポート業務<br />（受講生フォロー、事務サポート等）</>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <th style={thStyle}>契約期間</th>
+            <td style={tdStyle}>
+              <span style={highlightStyle}>{warekiStart}</span> 〜 <span style={highlightStyle}>{warekiEnd}</span>
+            </td>
+          </tr>
+          <tr>
+            <th style={thStyle}>報酬</th>
+            <td style={tdStyle}>
+              {isCounselor ? (
+                <>１件あたりの報酬は、甲が別途定める報酬表に基づく</>
+              ) : (
+                <>月額報酬は、甲乙間で別途合意した金額とする</>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <th style={thStyle}>支払方法</th>
+            <td style={tdStyle}>
+              月末締め翌月末払い、乙の指定する銀行口座への振込（振込手数料は甲負担）
+            </td>
+          </tr>
+          <tr>
+            <th style={thStyle}>業務遂行場所</th>
+            <td style={tdStyle}>
+              オンライン（Zoom等）を基本とし、必要に応じて甲が指定する場所
+            </td>
+          </tr>
+          <tr>
+            <th style={thStyle}>連絡手段</th>
+            <td style={tdStyle}>
+              LINE・Chatwork等、甲が指定するツール
+            </td>
+          </tr>
+          <tr>
+            <th style={thStyle}>更新</th>
+            <td style={tdStyle}>
+              期間満了の1ヶ月前までに甲または乙から書面による解約の申し出がない限り、同一条件で自動更新する
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p style={{ marginTop: '16px' }}>
+        上記の他、基本契約の各条項が本個別契約に適用されるものとする。
+      </p>
+
+      <div style={{ marginTop: '48px' }}>
+        <p>本契約の締結を証するため、本書2通を作成し、甲乙記名押印のうえ、各自1通を保有する。</p>
+      </div>
+
+      <div style={{ marginTop: '32px' }}>
+        <p>契約締結日：{warekiContract || '令和　　年　　月　　日'}</p>
+      </div>
+
+      <div style={{ marginTop: '24px' }}>
+        <p>甲：一般社団法人 日本陰陽五行トーンビューティー協会</p>
+        <p style={{ paddingLeft: '2em' }}>代表理事　入江円香</p>
+        <p style={{ paddingLeft: '2em' }}>住所：千葉県松戸市西馬橋2-40-41</p>
       </div>
 
       <div style={{ marginTop: '24px' }}>
@@ -444,8 +815,17 @@ const ContractPreview = forwardRef<HTMLDivElement, { data: ContractData }>(
         {data.type === 'launch-outsource' && (
           <LaunchOutsourceContract data={data} />
         )}
+        {data.type === 'launch-receive' && (
+          <LaunchReceiveContract data={data} />
+        )}
         {data.type === 'general-outsource' && (
           <GeneralOutsourceContract data={data} />
+        )}
+        {data.type === 'jyb-base' && (
+          <JybBaseContract data={data} />
+        )}
+        {data.type === 'jyb-individual' && (
+          <JybIndividualContract data={data} />
         )}
       </div>
     );
