@@ -29,6 +29,7 @@ export default function ContractEditorPage({ params }: { params: Promise<{ id: s
       if (!loaded.company) loaded.company = 'mcreate';
       if (!loaded.paymentPlan) loaded.paymentPlan = '';
       if (!loaded.launchFee) loaded.launchFee = '';
+      if (!loaded.hourlyRate) loaded.hourlyRate = '';
       if (!loaded.jybRole) loaded.jybRole = 'counselor';
       setData(loaded);
     }
@@ -205,6 +206,19 @@ export default function ContractEditorPage({ params }: { params: Promise<{ id: s
                   onChange={(e) => updateField('launchFee', e.target.value)}
                   className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1a2744]"
                   placeholder="2,200,000"
+                />
+              </div>
+            )}
+
+            {data.type === 'general-outsource' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">時給（税込）</label>
+                <input
+                  type="text"
+                  value={data.hourlyRate}
+                  onChange={(e) => updateField('hourlyRate', e.target.value)}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1a2744]"
+                  placeholder="1,500"
                 />
               </div>
             )}

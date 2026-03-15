@@ -37,6 +37,8 @@ export interface ContractData {
   endDate: string;
   // ローンチ受託用
   launchFee: string;
+  // 業務委託一般用
+  hourlyRate: string;
   // JYB個別用
   jybRole: 'supporter' | 'counselor';
   createdAt: string;

@@ -12,6 +12,9 @@ const baseStyle: React.CSSProperties = {
   background: 'white',
   padding: '60px 70px',
   width: '210mm',
+  boxSizing: 'border-box',
+  overflowWrap: 'break-word',
+  wordBreak: 'normal',
 };
 
 const titleStyle: React.CSSProperties = {
@@ -41,6 +44,50 @@ const highlightStyle: React.CSSProperties = {
   color: '#c0392b',
   fontWeight: 700,
 };
+
+function SignatureBlock({ data, role }: { data: ContractData; role: '甲' | '乙' }) {
+  const isJybFixed = data.type === 'jyb-base' || data.type === 'jyb-individual';
+  const companyName = isJybFixed ? COMPANY_LABELS.jyb : COMPANY_LABELS[data.company];
+  const rep = isJybFixed ? COMPANY_REPRESENTATIVE.jyb : COMPANY_REPRESENTATIVE[data.company];
+  const addr = isJybFixed ? COMPANY_ADDRESS.jyb : COMPANY_ADDRESS[data.company];
+  const sealCompany = isJybFixed ? 'jyb' as const : data.company;
+
+  const sealText = sealCompany === 'mcreate'
+    ? ['株式会社', 'エム', 'クリエイト']
+    : ['一般社団法人', '日本陰陽五行', 'トーンビューティー', '協会'];
+  const sealSize = sealCompany === 'mcreate' ? 72 : 80;
+  const sealFontSize = sealCompany === 'mcreate' ? '14px' : '11px';
+  const sealLineHeight = sealCompany === 'mcreate' ? '20px' : '16px';
+
+  return (
+    <div style={{ marginTop: '24px', position: 'relative' }}>
+      <div style={{
+        position: 'absolute',
+        right: '0',
+        top: '0',
+        width: `${sealSize}px`,
+        height: `${sealSize}px`,
+        border: '2px solid #c0392b',
+        borderRadius: '50%',
+        color: '#c0392b',
+        fontSize: sealFontSize,
+        fontWeight: 700,
+        textAlign: 'center',
+        lineHeight: sealLineHeight,
+        paddingTop: sealCompany === 'mcreate' ? '8px' : '8px',
+        fontFamily: '"Noto Sans JP", serif',
+        boxSizing: 'border-box',
+      }}>
+        {sealText.map((line, i) => (
+          <span key={i}>{line}{i < sealText.length - 1 && <br />}</span>
+        ))}
+      </div>
+      <p>{role}：{companyName}</p>
+      <p style={{ paddingLeft: '2em' }}>{rep.title}　{rep.name}</p>
+      <p style={{ paddingLeft: '2em' }}>住所：{addr}</p>
+    </div>
+  );
+}
 
 function ConsultantContract({ data }: { data: ContractData }) {
   const months = data.type === 'consultant-3' ? '3' : '6';
@@ -157,17 +204,16 @@ function ConsultantContract({ data }: { data: ContractData }) {
       </div>
 
       <div style={{ marginTop: '32px' }}>
-        <p>令和　　{warekiContract ? warekiContract.replace('令和', '').replace('年', '年　　').replace('月', '月　　') : '　年　　月　　日'}</p>
+        <p>{warekiContract || '令和　　年　　月　　日'}</p>
       </div>
 
       <div style={{ marginTop: '24px' }}>
-        <p>（甲）：</p>
+        <p>（甲）：{data.clientName || '＿＿＿＿＿＿＿＿＿＿'}</p>
+        <p style={{ paddingLeft: '6em' }}>住所：</p>
+        <p style={{ paddingLeft: '6em' }}>{data.clientIsCompany ? `${data.clientName}　代表者：` : `氏名：${data.clientName}`}　　　　　　印</p>
       </div>
 
-      <div style={{ marginTop: '40px' }}>
-        <p>（乙）：　{COMPANY_ADDRESS[data.company]}</p>
-        <p style={{ paddingLeft: '6em' }}>{COMPANY_LABELS[data.company]}　{COMPANY_REPRESENTATIVE[data.company].name}</p>
-      </div>
+      <SignatureBlock data={data} role="乙" />
     </div>
   );
 }
@@ -328,14 +374,12 @@ function LaunchOutsourceContract({ data }: { data: ContractData }) {
         <p>契約締結日：{warekiContract || '令和　　年　　月　　日'}</p>
       </div>
 
-      <div style={{ marginTop: '24px' }}>
-        <p>甲：{COMPANY_LABELS[data.company]}</p>
-        <p style={{ paddingLeft: '2em' }}>{COMPANY_REPRESENTATIVE[data.company].title}　{COMPANY_REPRESENTATIVE[data.company].name}</p>
-        <p style={{ paddingLeft: '2em' }}>住所：{COMPANY_ADDRESS[data.company]}</p>
-      </div>
+      <SignatureBlock data={data} role="甲" />
 
       <div style={{ marginTop: '24px' }}>
         <p>乙：{data.clientName || '＿＿＿＿＿＿＿＿＿＿'}</p>
+        <p style={{ paddingLeft: '2em' }}>住所：</p>
+        <p style={{ paddingLeft: '2em' }}>{data.clientIsCompany ? `${data.clientName}　代表者：` : `氏名：${data.clientName}`}　　　　　　印</p>
       </div>
     </div>
   );
@@ -365,17 +409,16 @@ function GeneralOutsourceContract({ data }: { data: ContractData }) {
 
       <p style={articleStyle}>第２条　（委託期間）</p>
       <div style={indentStyle}>
-        <p>１．　本委託業務の期間は<span style={highlightStyle}>{warekiStart}</span>より<span style={highlightStyle}>{warekiEnd}</span>までとする。ただし、契約期限の1週間前までに甲乙双方から特段の意思表示がないときは、自動的に同一条件で契約が更新されるものとする。</p>
+        <p>１．　本委託業務の期間は<span style={highlightStyle}>{warekiStart}</span>よりとする。ただし、契約期限の1週間前までに甲乙双方から特段の意思表示がないときは、自動的に同一条件で契約が更新されるものとする。</p>
       </div>
 
       <p style={articleStyle}>第３条　（委託料等）</p>
       <div style={indentStyle}>
-        <p>１．　甲は、乙に対し、下記に記載するサービス内容の通り、委託料を乙の指定する口座に送金する方法により支払い、送金手数料は甲が負担する。支払額を本委託業務費として、本契約日から7日以内に１回目を支払い、以降は毎月25日に支払う。</p>
-        <p>２．　甲が前項の支払を遅滞する場合は、遅延損害金として14.6%相当額を支払う。</p>
+        <p>１．　甲は、乙に対し、下記に記載するサービス内容の通り、委託料を乙の指定する口座に送金する方法により支払い、送金手数料は甲が負担する。月末締め翌月末払いとする。</p>
       </div>
 
       <div style={{ marginTop: '16px' }}>
-        <p style={boldStyle}>金額：{data.amount ? `${data.amount}円（税込）` : '＿＿＿＿＿＿円（税込）'}</p>
+        <p style={boldStyle}>時給：{data.hourlyRate ? `${data.hourlyRate}円（税込）` : '＿＿＿＿＿＿円（税込）'}</p>
       </div>
 
       <p style={articleStyle}>第４条　（経費負担）</p>
@@ -422,13 +465,12 @@ function GeneralOutsourceContract({ data }: { data: ContractData }) {
         <p>契約締結日：{toWareki(data.contractDate) || '　　年　　月　　日'}</p>
       </div>
 
-      <div style={{ marginTop: '24px' }}>
-        <p>甲：{COMPANY_LABELS[data.company]}</p>
-        <p style={{ paddingLeft: '2em' }}>{COMPANY_REPRESENTATIVE[data.company].title}　{COMPANY_REPRESENTATIVE[data.company].name}</p>
-      </div>
+      <SignatureBlock data={data} role="甲" />
 
       <div style={{ marginTop: '24px' }}>
         <p>乙：{data.clientName || '＿＿＿＿＿＿＿＿＿＿'}</p>
+        <p style={{ paddingLeft: '2em' }}>住所：</p>
+        <p style={{ paddingLeft: '2em' }}>{data.clientIsCompany ? `${data.clientName}　代表者：` : `氏名：${data.clientName}`}　　　　　　印</p>
       </div>
     </div>
   );
@@ -550,13 +592,11 @@ function LaunchReceiveContract({ data }: { data: ContractData }) {
 
       <div style={{ marginTop: '24px' }}>
         <p>甲：{data.clientName || '＿＿＿＿＿＿＿＿＿＿'}</p>
+        <p style={{ paddingLeft: '2em' }}>住所：</p>
+        <p style={{ paddingLeft: '2em' }}>{data.clientIsCompany ? `${data.clientName}　代表者：` : `氏名：${data.clientName}`}　　　　　　印</p>
       </div>
 
-      <div style={{ marginTop: '24px' }}>
-        <p>乙：{COMPANY_LABELS[data.company]}</p>
-        <p style={{ paddingLeft: '2em' }}>{COMPANY_REPRESENTATIVE[data.company].title}　{COMPANY_REPRESENTATIVE[data.company].name}</p>
-        <p style={{ paddingLeft: '2em' }}>住所：{COMPANY_ADDRESS[data.company]}</p>
-      </div>
+      <SignatureBlock data={data} role="乙" />
     </div>
   );
 }
@@ -670,14 +710,12 @@ function JybBaseContract({ data }: { data: ContractData }) {
         <p>契約締結日：{warekiContract || '令和　　年　　月　　日'}</p>
       </div>
 
-      <div style={{ marginTop: '24px' }}>
-        <p>甲：一般社団法人 日本陰陽五行トーンビューティー協会</p>
-        <p style={{ paddingLeft: '2em' }}>代表理事　入江円香</p>
-        <p style={{ paddingLeft: '2em' }}>住所：千葉県松戸市西馬橋2-40-41</p>
-      </div>
+      <SignatureBlock data={data} role="甲" />
 
       <div style={{ marginTop: '24px' }}>
         <p>乙：{data.clientName || '＿＿＿＿＿＿＿＿＿＿'}</p>
+        <p style={{ paddingLeft: '2em' }}>住所：</p>
+        <p style={{ paddingLeft: '2em' }}>{data.clientIsCompany ? `${data.clientName}　代表者：` : `氏名：${data.clientName}`}　　　　　　印</p>
       </div>
     </div>
   );
@@ -696,6 +734,7 @@ function JybIndividualContract({ data }: { data: ContractData }) {
     marginTop: '16px',
     marginBottom: '16px',
     fontSize: '13px',
+    tableLayout: 'fixed',
   };
 
   const thStyle: React.CSSProperties = {
@@ -705,12 +744,15 @@ function JybIndividualContract({ data }: { data: ContractData }) {
     fontWeight: 700,
     textAlign: 'left',
     whiteSpace: 'nowrap',
+    width: '20%',
   };
 
   const tdStyle: React.CSSProperties = {
     border: '1px solid #333',
     padding: '8px 12px',
     textAlign: 'left',
+    wordBreak: 'normal',
+    overflowWrap: 'break-word',
   };
 
   return (
@@ -792,14 +834,12 @@ function JybIndividualContract({ data }: { data: ContractData }) {
         <p>契約締結日：{warekiContract || '令和　　年　　月　　日'}</p>
       </div>
 
-      <div style={{ marginTop: '24px' }}>
-        <p>甲：一般社団法人 日本陰陽五行トーンビューティー協会</p>
-        <p style={{ paddingLeft: '2em' }}>代表理事　入江円香</p>
-        <p style={{ paddingLeft: '2em' }}>住所：千葉県松戸市西馬橋2-40-41</p>
-      </div>
+      <SignatureBlock data={data} role="甲" />
 
       <div style={{ marginTop: '24px' }}>
         <p>乙：{data.clientName || '＿＿＿＿＿＿＿＿＿＿'}</p>
+        <p style={{ paddingLeft: '2em' }}>住所：</p>
+        <p style={{ paddingLeft: '2em' }}>{data.clientIsCompany ? `${data.clientName}　代表者：` : `氏名：${data.clientName}`}　　　　　　印</p>
       </div>
     </div>
   );

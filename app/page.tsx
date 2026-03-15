@@ -26,6 +26,7 @@ export default function Home() {
   const [formStartDate, setFormStartDate] = useState(todayStr());
   const [formContractDate, setFormContractDate] = useState(todayStr());
   const [formLaunchFee, setFormLaunchFee] = useState('');
+  const [formHourlyRate, setFormHourlyRate] = useState('');
   const [formJybRole, setFormJybRole] = useState<'supporter' | 'counselor'>('counselor');
 
   useEffect(() => {
@@ -78,6 +79,7 @@ export default function Home() {
       startDate: formStartDate,
       endDate,
       launchFee: formLaunchFee,
+      hourlyRate: formHourlyRate,
       jybRole: formJybRole,
       createdAt: now,
       updatedAt: now,
@@ -99,6 +101,7 @@ export default function Home() {
     setFormStartDate(todayStr());
     setFormContractDate(todayStr());
     setFormLaunchFee('');
+    setFormHourlyRate('');
     setFormJybRole('counselor');
   };
 
@@ -299,6 +302,19 @@ export default function Home() {
                 </div>
               )}
 
+              {formType === 'general-outsource' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">時給（税込）</label>
+                  <input
+                    type="text"
+                    value={formHourlyRate}
+                    onChange={(e) => setFormHourlyRate(e.target.value)}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1a2744]"
+                    placeholder="例: 1,500"
+                  />
+                </div>
+              )}
+
               {/* JYB個別: 役割選択 */}
               {formType === 'jyb-individual' && (
                 <div>
@@ -363,7 +379,8 @@ export default function Home() {
               </button>
               <button
                 onClick={handleCreate}
-                className="px-6 py-2 text-sm text-white bg-[#1a2744] rounded-md hover:bg-[#2a3a5c]"
+                disabled={!formName.trim()}
+                className="px-6 py-2 text-sm text-white bg-[#1a2744] rounded-md hover:bg-[#2a3a5c] disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 作成
               </button>
